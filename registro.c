@@ -3,9 +3,11 @@
 #include <unistd.h>
 #include <string.h>
 #include "registro.h"
+#include "painel.h"
 
 // Assinaturas
 char menuInicial(void);
+void painelUsuario(void);
 
 // Função principal de usuários
 void moduloUsuario(void) {
@@ -14,7 +16,9 @@ void moduloUsuario(void) {
         opcao = menuInicial();
         switch(opcao) {
         case '1':
-            loginUsuario();
+            if (loginUsuario()){
+                painelPrincipal();
+            }
             break;
         case '2':
             cadastroUsuario();
@@ -132,10 +136,8 @@ int loginUsuario() {
     fclose(arquivo);
 
     if (encontrado) {
-        printf("Login bem-sucedido!");
         return 1; // Sucesso
     } else {
-        printf("CPF ou senha incorretos!");
         return 0; // Falha
     }
 }
