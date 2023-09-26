@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h> // para a função system 
 #include <unistd.h> // para a função sleep
+#include "clientes.h"
 
 // chamada de funções
 char tela_clientes(void);
 void tela_cadastra_cliente(void);
+void tela_lista_cliente(void);
 //
 
 void modulo_clientes(void) {
@@ -17,7 +19,9 @@ void modulo_clientes(void) {
         case '1':
             tela_cadastra_cliente();
             break;
-
+        case '2':
+            tela_lista_cliente();
+            break;
         default:
             break;
         }
@@ -46,14 +50,6 @@ char tela_clientes(void) {
     sleep(1);
     return op;
 }
-// A estrutura de informações de um cliente
-typedef struct {
-    char nome[50];
-    char estado[2];
-    char cidade[40];
-    char endereco[120];
-    int telefone[12];
-} Clientes;
 
 void tela_cadastra_cliente(void) {
     Clientes cliente;
@@ -64,19 +60,29 @@ void tela_cadastra_cliente(void) {
     printf("*                   = = = = = Cadastrar Cliente = = = = =                    *\n");
     printf("*                                                                            *\n");
     printf("******************************************************************************\n");
-    printf("Nome: ");
-    scanf("%s[^\n]", cliente.nome);
+    printf("Nome do cliente: ");
+    scanf(" %[^\n]", cliente.nome);
+    printf("CPF do cliente: ");
+    scanf(" %[^\n]", cliente.cpf);
     printf("Cidade: ");
-    scanf("%s[^\n]", cliente.cidade);
+    scanf(" %[^\n]", cliente.cidade);
     printf("Unidade Federativa(Ex: RN, SP, RJ): ");
-    scanf("%s[^\n]", cliente.estado);
+    scanf(" %[^\n]", cliente.estado);
     printf("Endereço: ");
-    scanf("%s[^\n]", cliente.endereco);
+    scanf(" %[^\n]", cliente.endereco);
     printf("Telefone: ");
     scanf("%d" , cliente.telefone);
 }
 
-void tela_lista_cliente() {
+void tela_lista_cliente(void) {
     Clientes cliente;
+
+    system("clear||cls");
+    printf("******************************************************************************\n");
+    printf("*                                                                            *\n");
+    printf("*                   = = = = = Lista de Clientes = = = = =                    *\n");
+    printf("*                                                                            *\n");
+    printf("******************************************************************************\n");
+    
 }
 
