@@ -1,60 +1,60 @@
+// Arquivo principal do programa
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "sobre.h"
-#include "registro.h"
+#include <stdlib.h> // para a função system 
+#include <unistd.h> // para a função sleep
+#include "modules/sobre.h" // para as funções de informações do projeto
+#include "modules/estoque.h"
+#include "modules/clientes.h"
+#include "modules/fornecedores.h"
 
-// Assinatura das funções 
-char telaPrincipal(void);
-void telaSobre(void);
-void telaEquipe(void);
-void moduloUsuario(void);
-int cadastroUsuario();
+// chamada das funções
+char tela_iniciar(void);
+void tela_sobre(void);
+void modulo_estoque(void);
+//
 
 int main(void) {
-    char option;
+    char opcao;
 
     do {
-        option = telaPrincipal();
-        switch (option)
+        opcao = tela_iniciar();
+        switch (opcao)
         {
         case '1':
-            moduloUsuario();
+            modulo_estoque();    
             break;
         case '2':
-            telaEquipe();
+            tela_sobre();
             break;
-        case '3':
-            telaSobre();
+        default:
             break;
         }
-    } while (option != '0');
-
+    } while (opcao != '0');
+        
     return 0;
 }
 
-char telaPrincipal(void) {
+void limpar_tela() {
+    system("clear||cls");
+}
+
+char tela_iniciar(void) {
     char op;
 
-    system("clear||cls");
-    printf("\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("///                                                                         ///\n");
-    printf("///            = = = = = Sistema Inventory = = = = =                        ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            1. Acessar Inventory                                         ///\n");
-    printf("///            2. Componentes                                               ///\n");
-    printf("///            3. Sobre o projeto                                           ///\n");
-    printf("///            0. Sair                                                      ///\n");
-    printf("///                                                                         ///\n");
-    printf("///            Escolha a opção desejada: ");
+    limpar_tela();
+    printf("******************************************************************************\n");
+    printf("*                                                                            *\n");
+    printf("*                 = = = = = Sistema de Estoque = = = = =                     *\n");
+    printf("*                                                                            *\n");
+    printf("******************************************************************************\n");
+    printf("* 1. Administrar estoques                                                    *\n");
+    printf("* 2. Sobre o projeto                                                         *\n");
+    printf("* 0. Sair                                                                    *\n");
+    printf("******************************************************************************\n");
+    printf("Selecione a alternativa desejada: ");
     scanf(" %c", &op);
     getchar();
-    printf("///                                                                         ///\n");
-    printf("///                                                                         ///\n");
-    printf("///////////////////////////////////////////////////////////////////////////////\n");
-    printf("\n");
-    printf("\t\t\t<<< ... Aguarde ... >>>\n");
+    printf("<<< ... Aguarde ... >>>\n");
     sleep(1);
     return op;
 }
