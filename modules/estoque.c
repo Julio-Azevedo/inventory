@@ -9,6 +9,7 @@ char tela_estoque(void);
 char tela_clientes(void);
 void modulo_clientes(void);
 void modulo_fornecedores(void);
+void modulo_produtos(void);
 //
 
 void modulo_estoque(void) {
@@ -25,7 +26,7 @@ void modulo_estoque(void) {
             modulo_fornecedores();
             break;
         case '3':
-            /*code*/
+            modulo_produtos();
             break;
         default:
             break;
