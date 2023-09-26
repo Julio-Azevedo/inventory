@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h> // para a função system 
 #include <unistd.h> // para a função sleep
+#include "fornecedores.h"
 
 // chamada das funções
 char tela_fornecedores(void);
+void tela_cadastra_fornecedor(void);
 //
 
 void modulo_fornecedores(void) {
@@ -14,7 +16,7 @@ void modulo_fornecedores(void) {
         switch (opcao)
         {
         case '1':
-            /* code */
+            tela_cadastra_fornecedor();
             break;
         
         default:
@@ -46,17 +48,6 @@ char tela_fornecedores(void) {
     return op;
 }
 
-typedef struct {
-    char nome[50];
-    int CNPJ[20];
-    int telefone[12];
-    char estado[2];
-    char cidade[40];
-    char endereco[120];
-    char email[50];
-} Fornecedores;
-
-
 void tela_cadastra_fornecedor(void) {
     Fornecedores fornecedor;
 
@@ -67,5 +58,23 @@ void tela_cadastra_fornecedor(void) {
     printf("*                                                                            *\n");
     printf("******************************************************************************\n");
     printf("Nome do fornecedor: ");
-    scanf("%s", fornecedor.nome);
+    scanf(" %[^\n]", fornecedor.nome);
+    printf("CNPJ do fornecedor: ");
+    scanf("%d", fornecedor.CNPJ);
+    printf("Telefone do fornecedor: ");
+    scanf("%d", fornecedor.telefone);
+    printf("Unidade Federativa do fornecedor(Ex: RN, SP, RJ): ");
+    scanf("%s", fornecedor.estado);
+    printf("Municipio do fornecedor: ");
+    scanf(" %[^\n]", fornecedor.cidade);
+    printf("Endereço do fornecedor: ");
+    scanf(" %[^\n]", fornecedor.endereco);
+    printf("Email para contato do fornecedor: ");
+    scanf(" %[^\n]", fornecedor.email);
+}
+
+void tela_listar_fornecedor(void) {
+    Fornecedores fornecedor;
+
+    
 }
