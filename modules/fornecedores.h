@@ -5,7 +5,6 @@ typedef struct {
     int telefone[12];
     char estado[2];
     char cidade[40];
-    char endereco[120];
     char email[50];
 } Fornecedores;
 
