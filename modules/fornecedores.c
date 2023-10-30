@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h> // para a função system 
+#include <stdlib.h> // para a função system
 #include <unistd.h> // para a função sleep
 #include "fornecedores.h"
 
@@ -8,24 +8,27 @@ char tela_fornecedores(void);
 void tela_cadastra_fornecedor(void);
 //
 
-void modulo_fornecedores(void) {
+void modulo_fornecedores(void)
+{
     char opcao;
 
-    do {
+    do
+    {
         opcao = tela_fornecedores();
         switch (opcao)
         {
         case '1':
             tela_cadastra_fornecedor();
             break;
-        
+
         default:
             break;
         }
     } while (opcao != 0);
 }
 
-char tela_fornecedores(void) {
+char tela_fornecedores(void)
+{
     char op;
 
     system("clear||cls");
@@ -48,7 +51,8 @@ char tela_fornecedores(void) {
     return op;
 }
 
-void tela_cadastra_fornecedor(void) {
+void tela_cadastra_fornecedor(void)
+{
     Fornecedores fornecedor;
 
     system("clear||cls");
@@ -67,14 +71,11 @@ void tela_cadastra_fornecedor(void) {
     scanf("%s", fornecedor.estado);
     printf("Municipio do fornecedor: ");
     scanf(" %[^\n]", fornecedor.cidade);
-    printf("Endereço do fornecedor: ");
-    scanf(" %[^\n]", fornecedor.endereco);
     printf("Email para contato do fornecedor: ");
     scanf(" %[^\n]", fornecedor.email);
 }
 
-void tela_listar_fornecedor(void) {
+void tela_listar_fornecedor(void)
+{
     Fornecedores fornecedor;
-
-    
 }
