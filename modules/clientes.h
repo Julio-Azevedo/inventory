@@ -11,6 +11,6 @@ typedef struct {
 // chamada das funções
 void modulo_clientes(void);
 char tela_clientes(void);
-Clientes* tela_cadastro_cliente(void);
+Clientes* tela_cadastra_cliente(void);
 void tela_lista_cliente(void);
 void grava_cliente(Clientes*);
