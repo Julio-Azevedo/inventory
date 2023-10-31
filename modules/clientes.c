@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h> // para a função system 
+#include <string.h>
 #include <unistd.h> // para a função sleep
 #include "clientes.h"
+#include "util.h"
 
 // chamada de funções
 char tela_clientes(void);
-void tela_cadastra_cliente(void);
+Clientes* tela_cadastro_cliente(void);
 void tela_lista_cliente(void);
+void limpa_buffer(void);
+int valida_nome(const char *nome);
+int valida_cpf(char *cpf);
 //
 
 void modulo_clientes(void) {
     char opcao;
+    Clientes* modelo;
 
     do {
         opcao = tela_clientes();
         switch (opcao)
         {
         case '1':
-            tela_cadastra_cliente();
+            modelo = tela_cadastra_cliente();
+            grava_cliente(modelo);
             break;
         case '2':
             tela_lista_cliente();
@@ -51,27 +58,72 @@ char tela_clientes(void) {
     return op;
 }
 
-void tela_cadastra_cliente(void) {
-    Clientes cliente;
-
+Clientes* tela_cadastro_cliente(void) {
+    Clientes *cliente = (Clientes*)malloc(sizeof(Clientes));
+    if (cliente == NULL) {
+        perror("Erro na alocação de memória");
+        return NULL;
+    }
     system("clear||cls");
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                   = = = = = Cadastrar Cliente = = = = =                    *\n");
     printf("*                                                                            *\n");
     printf("******************************************************************************\n");
-    printf("Nome do cliente: ");
-    scanf(" %[^\n]", cliente.nome);
-    printf("CPF do cliente: ");
-    scanf(" %[^\n]", cliente.cpf);
-    printf("Cidade: ");
-    scanf(" %[^\n]", cliente.cidade);
-    printf("Unidade Federativa(Ex: RN, SP, RJ): ");
-    scanf(" %[^\n]", cliente.estado);
-    printf("Endereço: ");
-    scanf(" %[^\n]", cliente.endereco);
-    printf("Telefone: ");
-    scanf("%d" , cliente.telefone);
+    do
+    {
+        printf("Digite o nome do cliente: ");
+        scanf(" %[^\n]", cliente -> nome);
+        limpa_buffer();
+    } while (!valida_nome(cliente -> nome));
+
+    do
+    {
+        printf("Digite o CPF do cliente: ");
+        scanf(" %[^\n]", cliente -> cpf);
+        limpa_buffer();
+    } while (!valida_cpf(cliente -> cpf));    
+
+    do
+    {
+        printf("Digite a cidade do cliente: ");
+        scanf(" %[^\n]", cliente -> cidade);
+        limpa_buffer();
+    } while (!valida_nome(cliente -> nome));
+
+    do
+    {
+        printf("Digite a Unidade Federativa do cliente(Ex: RN, SP, RJ): ");
+        scanf(" %[^\n]", cliente -> estado);
+        limpa_buffer();
+    } while (!valida_nome(cliente -> nome));
+
+    do
+    {
+        printf("Digite o endereco do cliente: ");
+        scanf(" %[^\n]", cliente -> endereco);
+        limpa_buffer();
+    } while (1);
+
+    do
+    {
+        printf("Digite o telefone do cliente: ");
+        scanf(" %[^\n]", cliente -> telefone);
+        limpa_buffer();
+    } while (1);
+
+    return cliente;
+}
+
+void grava_cliente(Clientes* cliente) {
+    FILE *fp = fopen("Clientes.dat", "ab");
+    if (fp == NULL)
+    {
+        printf("Erro na abertura do arquivo");
+        return;
+    }
+    fwrite(cliente, sizeof(Clientes), 1, fp);
+    fclose(fp);
 }
 
 void tela_lista_cliente(void) {
