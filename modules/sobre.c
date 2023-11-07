@@ -14,7 +14,7 @@ void tela_sobre(void) {
     printf("*  distribuidoras a controlar e otimizar seus inventarios de forma           *\n");
     printf("*  eficiente. O programa oferece uma solucao completa para manter o          *\n");
     printf("*  equilibrio entre  oferta e demanda, melhorar a eficiencia operacional     *\n");
-    printf("*  e tomar decisoes em relação aos estoques.                                 *\n");
+    printf("*  e tomar decisoes em relacao aos estoques.                                 *\n");
     printf("*                                                                            *\n");
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
