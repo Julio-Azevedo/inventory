@@ -108,7 +108,7 @@ int verifica_cpf_cliente(const char* cpf) {
     FILE* fp = fopen("clientes.dat", "ab+");
     if (fp == NULL) {
         perror("Erro ao abrir o arquivo");
-        return -1; // Indica erro na abertura do arquivo
+        return -1; // indica erro na abertura do arquivo
     }
 
     // levando o ponteiro para o inicio do arquivo
@@ -118,14 +118,137 @@ int verifica_cpf_cliente(const char* cpf) {
     {
         if (cliente.status == 1 && strcmp(cliente.cpf, cpf) == 0)
         {
-            fclose(fp); // fechando o arquivo
-            return 1; // cpf já existente
+            // fechando o arquivo
+            fclose(fp); 
+            // cpf já existente
+            return 1; 
         }  
     }
-    
-    fclose(fp); // fechando o arquivo
-    return 0; // cpf válido
+    // fechando o arquivo
+    fclose(fp); 
+    // cpf válido
+    return 0; 
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ///  FEITO POR : CHATGPT
+
+// validação de cnpj
+int valida_cnpj(const char *cnpj) {
+    int resto;
+    int i, j, soma, digito1, digito2;
+    int multiplicador1[12] = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+    int multiplicador2[13] = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+
+    if(strlen(cnpj) != 14)
+        return 0;
+
+    // Verifica CNPJs invalidos conhecidos
+    if ((strcmp(cnpj, "00000000000000") == 0) ||
+        (strcmp(cnpj, "11111111111111") == 0) ||
+        (strcmp(cnpj, "22222222222222") == 0) ||
+        (strcmp(cnpj, "33333333333333") == 0) ||
+        (strcmp(cnpj, "44444444444444") == 0) ||
+        (strcmp(cnpj, "55555555555555") == 0) ||
+        (strcmp(cnpj, "66666666666666") == 0) ||
+        (strcmp(cnpj, "77777777777777") == 0) ||
+        (strcmp(cnpj, "88888888888888") == 0) ||
+        (strcmp(cnpj, "99999999999999") == 0))
+        return 0;
+
+    // Validação do primeiro dígito verificador
+    soma = 0;
+    for(i = 0; i < 12; i++) {
+        soma += (cnpj[i] - '0') * multiplicador1[i];
+    }
+
+    resto = soma % 11;
+    if (resto < 2)
+        digito1 = 0;
+    else
+        digito1 = 11 - resto;
+
+    if (cnpj[12] - '0' != digito1)
+        return 0;
+
+    // Validação do segundo dígito verificador
+    soma = 0;
+    for(i = 0; i < 13; i++) {
+        soma += (cnpj[i] - '0') * multiplicador2[i];
+    }
+
+    resto = soma % 11;
+    if (resto < 2)
+        digito2 = 0;
+    else
+        digito2 = 11 - resto;
+
+    if (cnpj[13] - '0' != digito2)
+        return 0;
+
+    return 1;
+}
+/////////////////////////////////////////////////////////////////////////////
+///  FEITO POR : CHATGPT
+
+// verifica se o cnpj ja está cadastrado no arquivo de fornecedores
+int verifica_cnpj_fornecedor(const char* cnpj) {
+    Fornecedores fornecedor;
+    FILE* fp = fopen("fornecedores.dat", "ab+");
+    if (fp == NULL) {
+        // se não for possível abrir o arquivo, mesmo para criação, retorna -1.
+        perror("Erro ao abrir o arquivo");
+        return -1;
+    }
+
+    // levando o ponteiro para o inicio do arquivo
+    fseek(fp, 0, SEEK_SET);
+
+    while (fread(&fornecedor, sizeof(Fornecedores), 1, fp)) {
+        if (fornecedor.status == 1 && strcmp(fornecedor.cnpj, cnpj) == 0) {
+            // fechando o arquivo
+            fclose(fp); 
+            // cnpj já cadastrado
+            return 1; 
+        }  
+    }
+    // fechando o arquivo
+    fclose(fp); 
+    // cnpj livre para cadastro
+    return 0; 
+}
+/////////////////////////////////////////////////////////////////////////////
+///  FEITO POR : CHATGPT
+
+// valição de cep para o cadastro de fornecedores
+int valida_cep(const char* cep) {
+    int i;
+
+    // Verifica o tamanho do CEP
+    if (strlen(cep) != 8) {
+        return 0;
+    }
+
+    // Verifica se todos os caracteres são dígitos
+    for (i = 0; i < 8; i++) {
+        if (!ehDigito((unsigned char)cep[i])) {
+            return 0; // retorna falso se não for
+        }
+    }
+
+    // cep válido
+    return 1; 
+}
+/////////////////////////////////////////////////////////////////////////////
+///  FEITO POR : CHATGPT
+
+// validação de email para o cadastro de fornecedores
+int valida_email(char *email )
+{
+    char usuario[256], site[256], dominio[256];
+    if( sscanf( email, "%[^@ \t\n]@%[^. \t\n].%3[^ \t\n]", usuario, site, dominio ) != 3 )
+        return 0;
+    return 1;
+}  
+/////////////////////////////////////////////////////////////////////////////
+/// AUTOR : LACOBUS /// STACKOVERFLOW : https://pt.stackoverflow.com/questions/310096/como-validar-um-e-mail-em-c
