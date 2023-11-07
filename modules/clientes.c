@@ -194,7 +194,9 @@ Clientes *tela_pesquisa_cliente(void)
     FILE *fp = fopen("clientes.dat", "rb");
     if (fp == NULL)
     {
-        printf("Erro na abertura do arquivo");
+        printf("O programa ainda nao possui clientes cadastrados\n");
+        printf("<<< Tecle <ENTER> para continuar >>>\n");
+        getchar();
         free(cliente);
         return NULL;
     }
@@ -253,6 +255,7 @@ void tela_edita_cliente(void)
         printf("\n");
         printf("<<< Nenhum cliente encontrado >>>\n");
         printf("<<< Tecle <ENTER> para continuar >>>\n");
+        getchar();
     }
     else
     {
