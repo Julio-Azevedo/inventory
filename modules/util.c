@@ -5,6 +5,8 @@
 #include <wctype.h>
 #include <wchar.h>
 #include "util.h"
+#include "clientes.h"
+#include "fornecedores.h"
 
 // funcionalidades
 // limpar o buffer apos algum dado de entrada ser passado
@@ -31,7 +33,7 @@ int valida_nome(const char *nome) {
 }
 
 // validação de cpf
-int valida_cpf(char *cpf)
+int valida_cpf(const char *cpf)
 {
     int i, j, digito1 = 0, digito2 = 0;
     if(strlen(cpf) != 11)
@@ -83,7 +85,7 @@ int ehDigito(char c) {
 /// Flavius Gorgonio: https://github.com/flgorgonio/linguasolta_2020.2
 
 // validação de telefone
-int valida_telefone(char* telefone) {
+int valida_telefone(const char* telefone) {
   int tam;
   tam = strlen(telefone);
   if (tam != 13) {
@@ -98,3 +100,32 @@ int valida_telefone(char* telefone) {
 }
 /////////////////////////////////////////////////////////////////////////////
 /// Adaptado de Flavius Gorgonio: https://github.com/flgorgonio/linguasolta_2020.2
+
+
+// verifica se o CPF já está cadastrado 
+int verifica_cpf_cliente(const char* cpf) {
+    Clientes cliente;
+    FILE* fp = fopen("clientes.dat", "ab+");
+    if (fp == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return -1; // Indica erro na abertura do arquivo
+    }
+
+    // levando o ponteiro para o inicio do arquivo
+    fseek(fp, 0, SEEK_SET);
+    
+    while (fread(&cliente, sizeof(Clientes), 1, fp))
+    {
+        if (cliente.status == 1 && strcmp(cliente.cpf, cpf) == 0)
+        {
+            fclose(fp); // fechando o arquivo
+            return 1; // cpf já existente
+        }  
+    }
+    
+    fclose(fp); // fechando o arquivo
+    return 0; // cpf válido
+}
+
+/////////////////////////////////////////////////////////////////////////////
+///  FEITO POR : CHATGPT
