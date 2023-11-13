@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h> // para a função system
+#include <stdlib.h>
+#include "util.h"
 #include "sobre.h"
 
 void tela_sobre(void) {
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                 = = = = = Sistema Inventory = = = = =                      *\n");
