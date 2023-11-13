@@ -1,16 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h> // para a função system 
-#include <unistd.h> // para a função sleep
+#include <stdlib.h>
+#include <unistd.h>
+#include "util.h"
 #include "estoque.h"
-#include "clientes.h"
-
-// chamadas de funções
-char tela_estoque(void);
-char tela_clientes(void);
-void modulo_clientes(void);
-void modulo_fornecedores(void);
-void modulo_produtos(void);
-//
 
 void modulo_estoque(void) {
     char opcao;
@@ -48,9 +40,7 @@ char tela_estoque(void) {
     printf("* 3. Produtos                                                                *\n");
     printf("* 0. Voltar                                                                  *\n");
     printf("******************************************************************************\n");
-    printf("Selecione a alternativa desejada: ");
-    scanf(" %c", &op);
-    getchar();
+    op = controle_menu();
     printf("<<< ... Aguarde ... >>>\n");
     sleep(1);
     return op;
