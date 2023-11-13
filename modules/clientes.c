@@ -1,25 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h> // para a função system
+#include <stdlib.h>
 #include <string.h>
-#include <unistd.h> // para a função sleep
-#include "clientes.h"
+#include <unistd.h>
 #include "util.h"
-
-// chamada de funções
-char tela_clientes(void);
-Clientes *tela_cadastra_cliente(int editando);
-void tela_lista_cliente(void);
-Clientes *tela_pesquisa_cliente(void);
-void limpa_buffer(void);
-int valida_nome(const char *nome);
-int valida_cpf(const char *cpf);
-int verifica_cpf_cliente(const char *cpf);
-int valida_telefone(const char *telefone);
-Clientes *busca_cpf_cliente(char *cpf);
-void tela_edita_cliente(void);
-void regrava_cliente(Clientes *cliente);
-void tela_excluir_cliente(void);
-//
+#include "clientes.h"
 
 void modulo_clientes(void)
 {
@@ -518,7 +502,7 @@ void regrava_cliente(Clientes *cliente)
         {
             possui_cliente = 1;
             // Move o ponteiro para trás do tamanho de um Cliente
-            if (fseek(fp, -1 * sizeof(Clientes), SEEK_CUR) != 0)
+            if (fseek(fp, -(off_t)sizeof(Clientes), SEEK_CUR) != 0)
             {
                 perror("Erro ao posicionar o ponteiro do arquivo");
                 break; // Se fseek falhar, saia do loop
