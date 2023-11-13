@@ -1,22 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h> // para a função system
-#include <unistd.h> // para a função sleep
+#include <stdlib.h>
+#include <unistd.h>
 #include "util.h"
 #include "fornecedores.h"
-
-// chamada das funções
-char tela_fornecedores(void);
-Fornecedores *tela_cadastra_fornecedor(int editando);
-void grava_fornecedor(Fornecedores *fornecedor);
-void exibe_fornecedor(Fornecedores *fornecedor);
-void tela_listar_fornecedor(void);
-void regrava_fornecedor(Fornecedores *fornecedor);
-Fornecedores *tela_pesquisa_fornecedor(void);
-void tela_edita_fornecedor(void);
-Fornecedores *busca_cnpj_fornecedor(const char *cnpj);
-void tela_excluir_fornecedor(void);
-//
 
 void modulo_fornecedores(void)
 {
@@ -53,7 +40,7 @@ char tela_fornecedores(void)
 {
     char op;
 
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                    = = = = = Fornecedores = = = = =                        *\n");
@@ -85,7 +72,7 @@ Fornecedores *tela_cadastra_fornecedor(int editando)
         perror("Erro na alocação de memória");
         return NULL;
     }
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                 = = = = = Cadastrar Fornecedor = = = = =                   *\n");
@@ -181,7 +168,7 @@ Fornecedores *tela_pesquisa_fornecedor(void)
     char nome_pesquisa[51];
     int opt_pesquisa;
     Fornecedores *fornecedor = (Fornecedores *)malloc(sizeof(Fornecedores));
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                   = = = = = Pesquisar Clientes = = = = =                   *\n");
@@ -271,7 +258,7 @@ void tela_edita_fornecedor(void)
     Fornecedores *fornecedor;
     char *cnpj_pesquisa = (char *)malloc(26 * sizeof(char));
 
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                   = = = = = Editar Fornecedores = = = = =                  *\n");
@@ -341,7 +328,7 @@ void tela_excluir_fornecedor(void)
     Fornecedores *fornecedor = (Fornecedores *)malloc(sizeof(Fornecedores));
     char cnpj_pesquisa[15];
 
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                   = = = = = Excluir Fornecedor = = = = =                   *\n");
@@ -432,7 +419,7 @@ void tela_listar_fornecedor(void)
         perror("Erro na alocação de memória");
         return;
     }
-    system("clear||cls");
+    limpar_tela();
     printf("******************************************************************************\n");
     printf("*                                                                            *\n");
     printf("*                   = = = = = Lista de Fornecedores = = = = =                *\n");
@@ -517,17 +504,18 @@ void regrava_fornecedor(Fornecedores *fornecedor)
     }
 
     int possui_fornecedor = 0;
-    // Busca o fornecedor pelo CNPJ no arquivo
+    // busca o fornecedor pelo CNPJ no arquivo
     while (fread(&fornecedor_lido, sizeof(Fornecedores), 1, fp) == 1)
-    { // Verifica se um registro foi lido
+    { // verifica se um registro foi lido
         if (strcmp(fornecedor_lido.cnpj, fornecedor->cnpj) == 0)
         {
             possui_fornecedor = 1;
-            // Move o ponteiro para trás do tamanho de um Fornecedore
-            if (fseek(fp, -1 * sizeof(Fornecedores), SEEK_CUR) != 0)
+            // move o ponteiro para trás do tamanho de um Fornecedore
+            if (fseek(fp, -(off_t)sizeof(Fornecedores), SEEK_CUR) != 0)
             {
                 perror("Erro ao posicionar o ponteiro do arquivo");
-                break; // Se fseek falhar, saia do loop
+                // se fseek falhar, saia do loop
+                break;
             }
             fwrite(fornecedor, sizeof(Fornecedores), 1, fp);
             break;
