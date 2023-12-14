@@ -1,42 +1,24 @@
-# nome do executável
-TARGET = inventory
-
-# compilador
 CC = gcc
+CFLAGS = -Wall -Wextra
 
-# flags do compilador
-CFLAGS = -Wall -Wextra -g
-
-# diretórios
 SRC_DIR = src
 MODULES_DIR = modules
-BUILD_DIR = build
+COMMON_DIR = common
+HEADERS_DIR = headers
 
-# lista de arquivos fonte
-SOURCES = $(SRC_DIR)/inventory.c $(wildcard $(MODULES_DIR)/*.c)
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c) $(wildcard $(COMMON_DIR)/*.c)
+OBJ_FILES = $(patsubst %.c,%.o,$(SRC_FILES))
+HEADER_FILES = $(wildcard $(HEADERS_DIR)/*.h)
 
-# lista de arquivos objeto gerados a partir dos arquivos fonte
-OBJECTS = $(patsubst $(MODULES_DIR)/%.c,$(BUILD_DIR)/%.o,$(filter %.c,$(SOURCES)))
+TARGET = inventory
 
-# regra padrão
 all: $(TARGET)
 
-# Regra para gerar o executável
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJ_FILES)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Cria diretórios se não existirem
-$(BUILD_DIR):
-	if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+%.o: %.c $(HEADER_FILES)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Regra para gerar os arquivos objeto
-$(BUILD_DIR)/%.o: $(MODULES_DIR)/%.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/inventory.o: $(SRC_DIR)/inventory.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-
-# Limpeza
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -f $(OBJ_FILES) $(TARGET)

@@ -1,13 +1,17 @@
-// chamando as funções de funcionalidade
-void limpa_buffer(void);
-void limpar_tela(void);
-int valida_nome(const char *nome);
-int valida_cpf(const char *cpf);
+// util.h
+#if !defined(UTIL_H)
+#define UTIL_H
+
+void limparBuffer(void);
+void limparTela(void);
 int ehDigito(char c);
-int valida_telefone(const char *telefone);
-int verifica_cpf_cliente(const char *cpf);
-int valida_cnpj(const char *cnpj);
-int verifica_cnpj_fornecedor(const char* cnpj);
-int valida_cep(const char* cep);
-int valida_email(char *email );
-char controle_menu(void);
+char controlarMenu(void);
+int validarEmail(char *email);
+void tratamentoVerificaNulo(void *ponteiro, const char *mensagem_erro);
+int validarNome(const char *nome);
+int validarCnpj(const char *cnpj);
+int validarTelefone(const char *telefone);
+int validarNumero(const char *str);
+int validarCpf(const char *cpf);
+
+#endif // UTIL_H
