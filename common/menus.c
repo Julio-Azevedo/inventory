@@ -1,7 +1,7 @@
 // menus.c
 #include <stdio.h>
 #include <stdlib.h>
-#include "menu.h"
+#include "menus.h"
 #include "../modules/util.h"
 #include "../modules/relatorio.h"
 #include "../modules/fornecedor.h"
