@@ -19,7 +19,7 @@ struct fornecedor
 void moduloFornecedor();
 void cadastrarFornecedor();
 void pesquisarFornecedor();
-void editarFornecedor(Fornecedor *lista);
+void editarFornecedor();
 void excluirFornecedor(const char *cnpj);
 
 // auxiliar
