@@ -16,7 +16,7 @@ struct cliente
 };
 
 void moduloCliente();
-Cliente *cadastrarCliente(Cliente *lista);
+void cadastrarCliente(); 
 void pesquisarCliente();
 void editarCliente(Cliente *lista);
 void excluirCliente(Cliente *lista, const char *cpf);
