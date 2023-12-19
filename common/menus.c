@@ -74,8 +74,8 @@ void mostrarMenuRelatorio()
     printf("* 5. Relatorio Produtos Inativos                                            *\n");
     printf("* 6. Relatorio Produtos Ordem Alfabetica                                    *\n");
     printf("* 7. Relatorio Todos Clientes                                               *\n");
-    printf("* 8. Relatorio Clientes Inativos                                           *\n");
-    printf("* 9. Relatorio Clientes Ordem Alfabetica                                   *\n");
+    printf("* 8. Relatorio Clientes Inativos                                            *\n");
+    printf("* 9. Relatorio Clientes Ordem Alfabetica                                    *\n");
     printf("* 0. Voltar                                                                 *\n");
     printf("*****************************************************************************\n");
 }
