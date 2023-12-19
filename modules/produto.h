@@ -13,18 +13,18 @@ struct produto
     char valor_venda[9];
     int id;
     char status;
-    Produto* prox;
+    Produto *prox;
 };
 
 void moduloProduto();
-Produto *cadastrarProduto(Produto *lista);
+void cadastrarProduto();
 void pesquisarProdutos();
-void editarProduto(Produto *lista);
-void excluirProduto(Produto *lista, const char *cnpj);
+void editarProduto();
+void excluirProduto(const char *cnpj);
 
 // auxiliar
 int pegarProximoIdProduto();
 void mostrarProduto(const Produto *produto);
-void excluirProdutoPorCNPJ(Produto *lista);
+void excluirProdutoPorCNPJ();
 
 #endif // PRODUTOS_H
