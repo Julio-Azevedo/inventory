@@ -11,7 +11,6 @@
 void moduloProduto()
 {
     char opcao;
-    Produto *rel = NULL;
     do
     {
         mostrarMenuProdutos();
@@ -20,16 +19,16 @@ void moduloProduto()
         switch (opcao)
         {
         case '1':
-            rel = cadastrarProduto(rel);
+            cadastrarProduto();
             break;
         case '2':
             pesquisarProdutos();
             break;
         case '3':
-            editarProduto(rel);
+            editarProduto();
             break;
         case '4':
-            excluirProdutoPorCNPJ(rel);
+            excluirProdutoPorCNPJ();
             break;
         default:
             break;
@@ -38,11 +37,14 @@ void moduloProduto()
 }
 
 // cadastro de produto
-Produto *cadastrarProduto(Produto *lista)
+void cadastrarProduto()
 {
+    // aloca memoria para a struct
     Produto *novoProduto = (Produto *)malloc(sizeof(Produto));
+    // exibindo o menu de cadastro de produto
     mostrarMenuCadastroProduto();
 
+    // solicitando o cnpj do fornecedor do produto
     do
     {
         printf("Informe o CNPJ do fornecedor do produto: ");
@@ -50,6 +52,7 @@ Produto *cadastrarProduto(Produto *lista)
         limparBuffer();
     } while (!validarCnpj(novoProduto->cnpj) || !ehCnpjRegistrado(novoProduto->cnpj));
 
+    // solicitando a quantidade de produtos para adicionar ao estoque
     do
     {
         printf("Informe a QUANTIDADE de unidades do produto: ");
@@ -57,6 +60,7 @@ Produto *cadastrarProduto(Produto *lista)
         limparBuffer();
     } while (!validarNumero(novoProduto->quantidade));
 
+    // solicitando o nome do produto
     do
     {
         printf("Informe o NOME do produto: ");
@@ -64,6 +68,7 @@ Produto *cadastrarProduto(Produto *lista)
         limparBuffer();
     } while (!validarNome(novoProduto->nome));
 
+    // solicitando o valor que o produto foi comprado
     do
     {
         printf("Informe o VALOR DE COMPRA do produto: ");
@@ -71,6 +76,7 @@ Produto *cadastrarProduto(Produto *lista)
         limparBuffer();
     } while (!validarNumero(novoProduto->valor_compra));
 
+    // solicitando o valor que o produto vai ser vendido
     do
     {
         printf("Informe o VALOR DE VENDA do produto: ");
@@ -78,44 +84,28 @@ Produto *cadastrarProduto(Produto *lista)
         limparBuffer();
     } while (!validarNumero(novoProduto->valor_venda));
 
+    // adicionando um novo id ao produto
     novoProduto->id = pegarProximoIdProduto();
+    // informando que o status do produto esta ativo
     novoProduto->status = '1';
+    // inicializando o ponteiro prox como NULL
     novoProduto->prox = NULL;
 
-    if (lista == NULL)
-    {
-        FILE *fp = fopen("data/produtos.dat", "ab");
-        tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
-
-        fwrite(novoProduto, sizeof(Produto), 1, fp);
-        fclose(fp);
-
-        printf("\n");
-        printf(green "Produto cadastrado com sucesso!\n" reset);
-        printf("\t<ENTER> para continuar\n");
-        getchar();
-        return novoProduto;
-    }
-
-    Produto *atual = lista;
-    while (atual->prox != NULL)
-    {
-        atual = atual->prox;
-    }
-
-    atual->prox = novoProduto;
-
+    // abrindo o arquivo de produtos
     FILE *fp = fopen("data/produtos.dat", "ab");
+    // fazendo o tratamento de erro
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
 
+    // escrevendo novo produto no arquivo de produtos
     fwrite(novoProduto, sizeof(Produto), 1, fp);
+    // fechando o arquivo de produtos
     fclose(fp);
 
     printf("\n");
     printf(green "Produto cadastrado com sucesso!\n" reset);
     printf("\t<ENTER> para continuar\n");
     getchar();
-    return lista;
+    free(novoProduto);
 }
 
 // pesquisa de produtos
@@ -123,37 +113,60 @@ void pesquisarProdutos()
 {
     Produto produto;
     int encontrado = 0;
-    char cnpjPesquisa[50];
+    char opcaoPesquisa;
+    char termoPesquisa[50];
+
     mostrarMenuPesquisaProduto();
 
-    do
+    printf("* Escolha o critério de pesquisa:                                           *\n");
+    printf("* 1. CNPJ                                                                   *\n");
+    printf("* 2. Nome do Produto                                                        *\n");
+    printf("*****************************************************************************\n");
+    printf("\n");
+    printf("Opção: ");
+    scanf(" %c", &opcaoPesquisa);
+    limparBuffer();
+
+    switch (opcaoPesquisa)
     {
-        printf("Informe o CNPJ do fornecedor do produto (somente numeros): ");
-        scanf(" %[^\n]", cnpjPesquisa);
+    case '1':
+        printf("Informe o CNPJ do fornecedor do produto (somente números): ");
+        scanf(" %[^\n]", termoPesquisa);
         limparBuffer();
-    } while (!validarCnpj(cnpjPesquisa));
+        break;
+    case '2':
+        printf("Informe o Nome do Produto: ");
+        scanf(" %[^\n]", termoPesquisa);
+        limparBuffer();
+        break;
+    default:
+        printf("Opção de pesquisa inválida.\n");
+        printf("\n");
+        printf("\t<ENTER> para continuar\n");
+        getchar();
+        return;
+    }
 
     FILE *fp = fopen("data/produtos.dat", "rb");
 
     if (fp == NULL)
     {
-        fp = fopen("data/produtos.dat", "wb");
-        tratamentoVerificaNulo(fp, "Erro na criação do arquivo de produtos\n");
-
-        fclose(fp);
+        printf("Erro na abertura do arquivo de produtos.\n");
+        printf("\n");
+        printf("\t<ENTER> para continuar\n");
+        getchar();
         return;
     }
 
-    while (fread(&produto, sizeof(Produto), 1, fp) == 1)
+    while (!feof(fp) && fread(&produto, sizeof(Produto), 1, fp) == 1)
     {
-        if (strcmp(produto.cnpj, cnpjPesquisa) == 0 && produto.status == '1')
+        if ((opcaoPesquisa == '1' && strcmp(produto.cnpj, termoPesquisa) == 0) ||
+            (opcaoPesquisa == '2' && strcmp(produto.nome, termoPesquisa) == 0) &&
+                produto.status == '1')
         {
             mostrarProduto(&produto);
             printf("\n");
-            printf("\t<ENTER> para continuar\n");
-            getchar();
             encontrado = 1;
-            break;
         }
     }
 
@@ -161,15 +174,18 @@ void pesquisarProdutos()
 
     if (!encontrado)
     {
-        printf("Produto com CNPJ %s não existe ou esta inativo.\n", cnpjPesquisa);
+        printf("Nenhum produto encontrado com o critério de pesquisa especificado.\n");
         printf("\n");
         printf("\t<ENTER> para continuar\n");
         getchar();
     }
+
+    printf("\t<ENTER> para voltar\n");
+    getchar();
 }
 
 // editar produto
-void editarProduto(Produto *lista)
+void editarProduto()
 {
     mostrarMenuEditarProduto();
     char cnpjBusca[50];
@@ -300,7 +316,8 @@ void editarProduto(Produto *lista)
     printf("Produto não encontrado.\n");
 }
 
-void excluirProduto(Produto *lista, const char *cnpj)
+// excluir produto
+void excluirProduto(const char *cnpj)
 {
     FILE *fp = fopen("data/produtos.dat", "rb+");
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo");
@@ -347,6 +364,8 @@ void excluirProduto(Produto *lista, const char *cnpj)
     printf("Produto não encontrado.\n");
 }
 
+// FUNCOES AUXILIARES DE PRODUTOS
+
 // obtendo o proximo valor de id
 int pegarProximoIdProduto()
 {
@@ -367,11 +386,35 @@ int pegarProximoIdProduto()
 // exibindo o produto
 void mostrarProduto(const Produto *produto)
 {
+    // Abra o arquivo de fornecedores para leitura
+    FILE *fornecedoresFile = fopen("data/fornecedores.dat", "rb");
+    if (fornecedoresFile == NULL)
+    {
+        printf("Erro na abertura do arquivo de fornecedores.\n");
+        return;
+    }
+
+    // Procure o fornecedor pelo CNPJ
+    Fornecedor fornecedor;
+    int encontrado = 0;
+    while (fread(&fornecedor, sizeof(Fornecedor), 1, fornecedoresFile) == 1)
+    {
+        if (strcmp(fornecedor.cnpj, produto->cnpj) == 0)
+        {
+            encontrado = 1;
+            break;
+        }
+    }
+
+    // Feche o arquivo de fornecedores
+    fclose(fornecedoresFile);
+
     printf("\n");
     printf("********* Dados do Fornecedor *********\n");
     printf("ID: %d\n", produto->id);
     printf("Nome: %s\n", produto->nome);
-    printf("CNPJ: %s\n", produto->cnpj);
+    printf("Fornecedor: %s (%s)\n", fornecedor.nome, produto->cnpj);
+    printf("Quantidade em estoque: %s\n", produto->quantidade);
     printf("Valor de Compra: %s\n", produto->valor_compra);
     printf("Valor de Venda: %s\n", produto->valor_venda);
     printf("Status: %s\n", (produto->status == '1') ? green "Ativo" reset : red "Inativo" reset);
@@ -379,7 +422,7 @@ void mostrarProduto(const Produto *produto)
 }
 
 // exclusao logica do fornecedor por cnpj
-void excluirProdutoPorCNPJ(Produto *lista)
+void excluirProdutoPorCNPJ()
 {
     mostrarMenuExcluirProduto();
     char cnpjBusca[50];
@@ -393,5 +436,5 @@ void excluirProdutoPorCNPJ(Produto *lista)
         return;
     }
 
-    excluirProduto(lista, cnpjBusca);
+    excluirProduto(cnpjBusca);
 }
