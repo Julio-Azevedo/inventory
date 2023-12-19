@@ -18,7 +18,7 @@ void moduloFornecedor()
         switch (opcao)
         {
         case '1':
-            rel = cadastrarFornecedor(rel);
+            cadastrarFornecedor();
             break;
         case '2':
             pesquisarFornecedor();
@@ -27,7 +27,7 @@ void moduloFornecedor()
             editarFornecedor(rel);
             break;
         case '4':
-            excluirFornecedorPorCNPJ(rel);
+            excluirFornecedorPorCNPJ();
             break;
         default:
             break;
@@ -36,18 +36,22 @@ void moduloFornecedor()
 }
 
 // cadastro de fornecedor
-Fornecedor *cadastrarFornecedor(Fornecedor *lista)
+void cadastrarFornecedor()
 {
+    // aloca memoria para a struct
     Fornecedor *novoFornecedor = (Fornecedor *)malloc(sizeof(Fornecedor));
-
+    // exibindo o menu de cadastro de fornecedores
     mostrarMenuCadastroFornecedor();
 
+    // solicitando o cnpj do fornecedor
     do
     {
         printf("Informe o CNPJ do fornecedor: ");
         scanf(" %[^\n]", novoFornecedor->cnpj);
         limparBuffer();
     } while (!validarCnpj(novoFornecedor->cnpj) || ehCnpjRegistrado(novoFornecedor->cnpj));
+
+    // solicitando o email do fornecedor
     do
     {
         printf("Informe o EMAIL do fornecedor: ");
@@ -55,6 +59,7 @@ Fornecedor *cadastrarFornecedor(Fornecedor *lista)
         limparBuffer();
     } while (!validarEmail(novoFornecedor->email) || ehEmailRegistrado(novoFornecedor->email));
 
+    // solicitando o telefone do fornecedor
     do
     {
         printf("Informe o TELEFONE do fornecedor: ");
@@ -62,6 +67,7 @@ Fornecedor *cadastrarFornecedor(Fornecedor *lista)
         limparBuffer();
     } while (!validarTelefone(novoFornecedor->telefone));
 
+    // solicitando o nome do fornecedor
     do
     {
         printf("Informe o NOME do fornecedor: ");
@@ -69,44 +75,28 @@ Fornecedor *cadastrarFornecedor(Fornecedor *lista)
         limparBuffer();
     } while (!validarNome(novoFornecedor->nome));
 
-    novoFornecedor->id = pegarProximoId();
+    // adicionando um novo id ao fornecedor
+    novoFornecedor->id = pegarProximoIdFornecedor();
+    // informando que o status do fornecedor esta ativo
     novoFornecedor->status = '1';
+    // inicializando o ponteiro prox como NULL
     novoFornecedor->prox = NULL;
 
-    if (lista == NULL)
-    {
-        FILE *fp = fopen("data/fornecedores.dat", "ab");
-        tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
-
-        fwrite(novoFornecedor, sizeof(Fornecedor), 1, fp);
-        fclose(fp);
-
-        printf("\n");
-        printf(green "Fornecedor cadastrado com sucesso!\n" reset);
-        printf("\t<ENTER> para continuar\n");
-        getchar();
-        return novoFornecedor;
-    }
-
-    Fornecedor *atual = lista;
-    while (atual->prox != NULL)
-    {
-        atual = atual->prox;
-    }
-
-    atual->prox = novoFornecedor;
-
+    // abrindo o arquivo de fornecedores
     FILE *fp = fopen("data/fornecedores.dat", "ab");
+    // fazendo o tratamento de erro
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
 
+    // escrevendo novo produto no arquivo de fornecedores
     fwrite(novoFornecedor, sizeof(Fornecedor), 1, fp);
+    // fechando o arquivo de fornecedores
     fclose(fp);
 
     printf("\n");
     printf(green "Fornecedor cadastrado com sucesso!\n" reset);
     printf("\t<ENTER> para continuar\n");
     getchar();
-    return lista;
+    free(novoFornecedor);
 }
 
 // pesquisa de fornecedor
@@ -219,7 +209,7 @@ void editarFornecedor(Fornecedor *lista)
                         printf("Informe o novo EMAIL do fornecedor: ");
                         scanf(" %[^\n]", fornecedorAtual.email);
                         limparBuffer();
-                    } while (!validarEmail(fornecedorAtual.email) || ehCnpjRegistrado(fornecedorAtual.email));
+                    } while (!validarEmail(fornecedorAtual.email) || ehEmailRegistrado(fornecedorAtual.email));
                     printf(green "Fornecedor editado com sucesso!\n" reset);
                     printf("\t<ENTER> para continuar\n");
                     getchar();
@@ -280,7 +270,7 @@ void editarFornecedor(Fornecedor *lista)
 }
 
 // excluir fornecedor
-void excluirFornecedor(Fornecedor *lista, const char *cnpj)
+void excluirFornecedor(const char *cnpj)
 {
     FILE *fp = fopen("data/fornecedores.dat", "rb+");
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo");
@@ -328,9 +318,9 @@ void excluirFornecedor(Fornecedor *lista, const char *cnpj)
 }
 
 // obtendo o proximo valor de id
-int pegarProximoId()
+int pegarProximoIdFornecedor()
 {
-    FILE *fp = fopen("fornecedores.dat", "rb");
+    FILE *fp = fopen("data/fornecedores.dat", "rb");
     if (fp == NULL)
     {
         return 1;
@@ -407,6 +397,9 @@ int ehCnpjRegistrado(const char *cnpj)
     }
 
     fclose(fp);
+    printf("Esse CNPJ ja esta cadastrado");
+    printf("\t<ENTER> para continuar\n");
+    getchar();
     return 0;
 }
 
@@ -429,6 +422,7 @@ int fornecedorJaCadastrado(const char *cnpj, const char *email)
         {
             fclose(fp);
             printf("E-mail já cadastrado. Tente outro.\n");
+
             return 1;
         }
 
@@ -445,7 +439,7 @@ int fornecedorJaCadastrado(const char *cnpj, const char *email)
 }
 
 // exclusao logica do fornecedor por cnpj
-void excluirFornecedorPorCNPJ(Fornecedor *lista)
+void excluirFornecedorPorCNPJ()
 {
     mostrarMenuExcluirFornecedor();
     char cnpjBusca[50];
@@ -459,5 +453,5 @@ void excluirFornecedorPorCNPJ(Fornecedor *lista)
         return;
     }
 
-    excluirFornecedor(lista, cnpjBusca);
+    excluirFornecedor(cnpjBusca);
 }
