@@ -4,11 +4,10 @@ CFLAGS = -Wall -Wextra
 SRC_DIR = src
 MODULES_DIR = modules
 COMMON_DIR = common
-HEADERS_DIR = headers
+OBJ_DIR = build
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c) $(wildcard $(COMMON_DIR)/*.c)
-OBJ_FILES = $(patsubst %.c,%.o,$(SRC_FILES))
-HEADER_FILES = $(wildcard $(HEADERS_DIR)/*.h)
+OBJ_FILES = $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRC_FILES)))
 
 TARGET = inventory
 
@@ -17,8 +16,17 @@ all: $(TARGET)
 $(TARGET): $(OBJ_FILES)
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c $(HEADER_FILES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/%.o: $(MODULES_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/%.o: $(COMMON_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OBJ_FILES) $(TARGET)
+	rm -rf $(OBJ_DIR) $(TARGET)
