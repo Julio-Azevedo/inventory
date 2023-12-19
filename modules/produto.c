@@ -161,8 +161,7 @@ void pesquisarProdutos()
     while (!feof(fp) && fread(&produto, sizeof(Produto), 1, fp) == 1)
     {
         if ((opcaoPesquisa == '1' && strcmp(produto.cnpj, termoPesquisa) == 0) ||
-            (opcaoPesquisa == '2' && strcmp(produto.nome, termoPesquisa) == 0) &&
-                produto.status == '1')
+            (opcaoPesquisa == '2' && strcmp(produto.nome, termoPesquisa) == 0 && produto.status == '1'))
         {
             mostrarProduto(&produto);
             printf("\n");
