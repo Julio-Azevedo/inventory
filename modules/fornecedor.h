@@ -17,18 +17,18 @@ struct fornecedor
 
 
 void moduloFornecedor();
-Fornecedor *cadastrarFornecedor(Fornecedor *lista);
+void cadastrarFornecedor();
 void pesquisarFornecedor();
 void editarFornecedor(Fornecedor *lista);
-void excluirFornecedor(Fornecedor *lista, const char *cnpj);
+void excluirFornecedor(const char *cnpj);
 
 // auxiliar
-int pegarProximoId();
+int pegarProximoIdFornecedor();
 void mostrarFornecedor(const Fornecedor *fornecedor);
 int ehEmailRegistrado(const char *email);
 int ehCnpjRegistrado(const char *cnpj);
 int fornecedorJaCadastrado(const char *cnpj, const char *email);
-void excluirFornecedorPorCNPJ(Fornecedor *lista);
+void excluirFornecedorPorCNPJ();
 
 // colors
 #define green "\x1b[32m"
