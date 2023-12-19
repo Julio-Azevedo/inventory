@@ -9,8 +9,6 @@
 void moduloFornecedor()
 {
     char opcao;
-    Fornecedor *rel = NULL;
-
     do
     {
         mostrarMenuFornecedor();
@@ -24,7 +22,7 @@ void moduloFornecedor()
             pesquisarFornecedor();
             break;
         case '3':
-            editarFornecedor(rel);
+            editarFornecedor();
             break;
         case '4':
             excluirFornecedorPorCNPJ();
@@ -150,7 +148,7 @@ void pesquisarFornecedor()
 }
 
 // editar fornecedor
-void editarFornecedor(Fornecedor *lista)
+void editarFornecedor()
 {
     mostrarMenuEditarFornecedor();
     char cnpjBusca[50];
