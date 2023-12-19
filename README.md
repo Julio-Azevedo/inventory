@@ -28,7 +28,7 @@ make
 ./inventory
 ```
 
-## Inicialização - Windows (utilize o replit se possivel)
+## Inicialização - Windows
 
 1. Clone o repositório:
 
