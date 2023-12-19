@@ -10,8 +10,6 @@
 void moduloCliente()
 {
     char opcao;
-    Cliente *rel = NULL;
-
     do
     {
         mostrarMenuCliente();
@@ -25,10 +23,10 @@ void moduloCliente()
             pesquisarCliente();
             break;
         case '3':
-            editarCliente(rel);
+            editarCliente();
             break;
         case '4':
-            excluirClientePorCPF(rel);
+            excluirClientePorCPF();
             break;
         default:
             break;
@@ -151,7 +149,7 @@ void pesquisarCliente()
 }
 
 // editar cliente
-void editarCliente(Cliente *lista)
+void editarCliente()
 {
     mostrarMenuEditarCliente();
     char cpfBusca[50];
@@ -271,7 +269,7 @@ void editarCliente(Cliente *lista)
 }
 
 // excluir cliente
-void excluirCliente(Cliente *lista, const char *cpf)
+void excluirCliente(const char *cpf)
 {
     FILE *fp = fopen("data/clientes.dat", "rb+");
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo");
@@ -421,7 +419,7 @@ void mostrarCliente(const Cliente *cliente)
 }
 
 // exclusao logica do cliente por cpf
-void excluirClientePorCPF(Cliente *lista)
+void excluirClientePorCPF()
 {
     mostrarMenuExcluirCliente();
     char cfpBusca[50];
@@ -435,5 +433,5 @@ void excluirClientePorCPF(Cliente *lista)
         return;
     }
 
-    excluirCliente(lista, cfpBusca);
+    excluirCliente(cfpBusca);
 }
