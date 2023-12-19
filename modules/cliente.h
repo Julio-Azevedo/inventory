@@ -18,15 +18,15 @@ struct cliente
 void moduloCliente();
 void cadastrarCliente(); 
 void pesquisarCliente();
-void editarCliente(Cliente *lista);
-void excluirCliente(Cliente *lista, const char *cpf);
+void editarCliente();
+void excluirCliente(const char *cpf);
 
 // auxiliar
 int ehEmailClienteRegistrado(const char *email);
 int ehCpfRegistrado(const char *cpf);
 int pegarProximoIdCliente();
 void mostrarCliente(const Cliente *cliente);
-void excluirClientePorCPF(Cliente *lista);
+void excluirClientePorCPF();
 
 
 // colors
