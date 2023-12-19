@@ -397,9 +397,6 @@ int ehCnpjRegistrado(const char *cnpj)
     }
 
     fclose(fp);
-    printf("Esse CNPJ ja esta cadastrado");
-    printf("\t<ENTER> para continuar\n");
-    getchar();
     return 0;
 }
 
@@ -422,7 +419,6 @@ int fornecedorJaCadastrado(const char *cnpj, const char *email)
         {
             fclose(fp);
             printf("E-mail já cadastrado. Tente outro.\n");
-
             return 1;
         }
 
