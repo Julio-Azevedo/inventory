@@ -19,7 +19,7 @@ void moduloCliente()
         switch (opcao)
         {
         case '1':
-            rel = cadastrarCliente(rel);
+            cadastrarCliente();
             break;
         case '2':
             pesquisarCliente();
@@ -37,18 +37,22 @@ void moduloCliente()
 }
 
 // cadastrando cliente
-Cliente *cadastrarCliente(Cliente *lista)
+void cadastrarCliente()
 {
+    // aloca memoria para a struct
     Cliente *novoCliente = (Cliente *)malloc(sizeof(Cliente));
-
+    // exibindo o menu de cadastro de fornecedores
     mostrarMenuCadastroFornecedor();
 
+    // solicitando o cpf do cliente
     do
     {
         printf("Informe o CPF do cliente: ");
         scanf(" %[^\n]", novoCliente->cpf);
         limparBuffer();
     } while (!validarCpf(novoCliente->cpf) || ehCpfRegistrado(novoCliente->cpf));
+
+    // solicitando o email do cliente
     do
     {
         printf("Informe o EMAIL do cliente: ");
@@ -56,6 +60,7 @@ Cliente *cadastrarCliente(Cliente *lista)
         limparBuffer();
     } while (!validarEmail(novoCliente->email) || ehEmailClienteRegistrado(novoCliente->email));
 
+    // solicitando o email do telefone
     do
     {
         printf("Informe o TELEFONE do cliente: ");
@@ -63,6 +68,7 @@ Cliente *cadastrarCliente(Cliente *lista)
         limparBuffer();
     } while (!validarTelefone(novoCliente->telefone));
 
+    // solicitando o email do nome
     do
     {
         printf("Informe o NOME do cliente: ");
@@ -70,44 +76,28 @@ Cliente *cadastrarCliente(Cliente *lista)
         limparBuffer();
     } while (!validarNome(novoCliente->nome));
 
+    // adicionando um novo id ao cliente
     novoCliente->id = pegarProximoIdCliente();
+    // informando que o status do cliente esta ativo
     novoCliente->status = '1';
+    // inicializando o ponteiro prox como NULL
     novoCliente->prox = NULL;
 
-    if (lista == NULL)
-    {
-        FILE *fp = fopen("data/clientes.dat", "ab");
-        tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
-
-        fwrite(novoCliente, sizeof(Cliente), 1, fp);
-        fclose(fp);
-
-        printf("\n");
-        printf(green "Cliente cadastrado com sucesso!\n" reset);
-        printf("\t<ENTER> para continuar\n");
-        getchar();
-        return novoCliente;
-    }
-
-    Cliente *atual = lista;
-    while (atual->prox != NULL)
-    {
-        atual = atual->prox;
-    }
-
-    atual->prox = novoCliente;
-
+    // abrindo o arquivo de cliente
     FILE *fp = fopen("data/clientes.dat", "ab");
+    // fazendo o tratamento de erro
     tratamentoVerificaNulo(fp, "Erro na abertura do arquivo para escrita.");
 
+    // escrevendo novo produto no arquivo de clientes
     fwrite(novoCliente, sizeof(Cliente), 1, fp);
+    // fechando o arquivo de clientes
     fclose(fp);
 
     printf("\n");
     printf(green "Cliente cadastrado com sucesso!\n" reset);
     printf("\t<ENTER> para continuar\n");
     getchar();
-    return lista;
+    free(novoCliente);
 }
 
 // pesquisando cliente
@@ -394,7 +384,23 @@ int pegarProximoIdCliente()
 
     Cliente ultimoClienteLista;
     fseek(fp, -sizeof(Cliente), SEEK_END);
-    fread(&ultimoClienteLista, sizeof(Cliente), 1, fp);
+
+    // Verificando se a leitura foi bem-sucedida
+    if (fread(&ultimoClienteLista, sizeof(Cliente), 1, fp) != 1)
+    {
+        fclose(fp);
+        printf("Erro na leitura dos dados do cliente.\n");
+        return 1;
+    }
+
+    // Verificar se o campo id é válido
+    if (ultimoClienteLista.id < 0)
+    {
+        fclose(fp);
+        printf("ID inválido encontrado nos dados do cliente.\n");
+        return 1;
+    }
+
     fclose(fp);
 
     return ultimoClienteLista.id + 1;
